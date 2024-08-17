@@ -31,8 +31,14 @@ const ProjectCard = ({ title, description, imageUrl, link }) => (
 const Projects = () => {
   const projects = [
     {
+      title: "Source Code For This Website",
+      description: "Click to view the source for this website.",
+      imageUrl: "./images/file-not-found.png",
+      link: "https://github.com/mithranm/portfolio-source"
+    },
+    {
       title: "Resume",
-      description: "Click to view my resume.",
+      description: "Click to view my resume (this is outdated right now).",
       imageUrl: "./images/leone-venter-VieM9BdZKFo-unsplash.jpg",
       link: "https://drive.google.com/file/d/1HStvUm-9jVPa6aKtordWNPSnZ26o0Ge4/view?usp=sharing"
     },
