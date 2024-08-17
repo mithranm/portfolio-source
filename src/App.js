@@ -37,6 +37,12 @@ const Projects = () => {
       link: "https://github.com/mithranm/portfolio-source"
     },
     {
+      title: "CatGPT",
+      description: "Click to join a discord server with an AI chatbot that roleplays a cat.",
+      imageUrl: "./images/file-not-found.png",
+      link: "https://github.com/mithranm/catgpt"
+    },
+    {
       title: "Resume",
       description: "Click to view my resume (this is outdated right now).",
       imageUrl: "./images/leone-venter-VieM9BdZKFo-unsplash.jpg",
