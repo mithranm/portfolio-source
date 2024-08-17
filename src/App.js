@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { Github, Linkedin, Mail, ChevronDown, ChevronUp } from 'lucide-react';
+
 
 const Header = () => (
   <header className="bg-gray-900 text-white py-8">
@@ -16,17 +16,50 @@ const Header = () => (
   </header>
 );
 
-const ProjectCard = ({ title, description, imageUrl, link }) => (
-  <a href={link} className="block">
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105">
-      <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p className="text-gray-600">{description}</p>
+const ProjectCard = ({ title, description, imageUrl, link }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 100; // Adjust this value to change when the "Read More" appears
+
+  const toggleExpand = (e) => {
+    e.preventDefault();
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <a href={link} className="block">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105 h-96 flex flex-col">
+        <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
+        <div className="p-4 flex flex-col flex-grow">
+          <h2 className="text-xl font-semibold mb-2">{title}</h2>
+          <div className="flex-grow overflow-hidden">
+            {description.length > maxLength && !isExpanded ? (
+              <>
+                <p className="text-gray-600">{description.slice(0, maxLength)}...</p>
+                <button 
+                  onClick={toggleExpand}
+                  className="text-blue-500 hover:text-blue-700 flex items-center mt-2"
+                >
+                  Read More <ChevronDown className="ml-1" size={16} />
+                </button>
+              </>
+            ) : (
+              <p className="text-gray-600">{description}</p>
+            )}
+            {isExpanded && (
+              <button 
+                onClick={toggleExpand}
+                className="text-blue-500 hover:text-blue-700 flex items-center mt-2"
+              >
+                Read Less <ChevronUp className="ml-1" size={16} />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  </a>
-);
+    </a>
+  );
+};
+
 
 const Projects = () => {
   const projects = [
