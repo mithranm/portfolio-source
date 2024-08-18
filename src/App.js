@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Github, Linkedin, Mail, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Github, Linkedin, Mail, X, ExternalLink, ChevronDown } from 'lucide-react';
 
 
 const Header = () => (
@@ -20,83 +20,114 @@ const Header = () => (
 
 const ProjectCard = ({ title, description, imageUrl, link }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const maxLength = 100; // Adjust this value to change when the "Read More" appears
+  const [showReadMore, setShowReadMore] = useState(false);
+  const descriptionRef = useRef(null);
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      setShowReadMore(descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight);
+    }
+  }, [description]);
 
   const toggleExpand = (e) => {
     e.preventDefault();
     setIsExpanded(!isExpanded);
+    document.body.style.overflow = isExpanded ? 'auto' : 'hidden';
   };
 
   return (
-    <a href={link} className="block">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105 h-96 flex flex-col">
-        <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
-        <div className="p-4 flex flex-col flex-grow">
-          <h2 className="text-xl font-semibold mb-2">{title}</h2>
-          <div className="flex-grow overflow-hidden">
-            {description.length > maxLength && !isExpanded ? (
-              <>
-                <p className="text-gray-600">{description.slice(0, maxLength)}...</p>
+    <>
+      <div className="group cursor-pointer" onClick={toggleExpand}>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
+          <div className="relative pb-[56.25%]">
+            <img src={imageUrl} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" />
+          </div>
+          <div className="p-4 flex flex-col flex-grow">
+            <h2 className="text-xl font-semibold mb-2 group-hover:text-blue-600 line-clamp-2">{title}</h2>
+            <div className="flex-grow overflow-hidden">
+              <p 
+                ref={descriptionRef}
+                className="text-gray-600 line-clamp-2"
+              >
+                {description}
+              </p>
+              {showReadMore && (
                 <button
-                  onClick={toggleExpand}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleExpand(e);
+                  }}
                   className="text-blue-500 hover:text-blue-700 flex items-center mt-2"
                 >
                   Read More <ChevronDown className="ml-1" size={16} />
                 </button>
-              </>
-            ) : (
-              <p className="text-gray-600">{description}</p>
-            )}
-            {isExpanded && (
-              <button
-                onClick={toggleExpand}
-                className="text-blue-500 hover:text-blue-700 flex items-center mt-2"
-              >
-                Read Less <ChevronUp className="ml-1" size={16} />
-              </button>
-            )}
+              )}
+            </div>
+          </div>
+          <div className="absolute bottom-2 right-2 text-blue-500 group-hover:text-blue-700 transition-transform duration-300 ease-in-out transform group-hover:scale-95">
+            <ExternalLink size={20} />
           </div>
         </div>
       </div>
-    </a>
+      {isExpanded && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-full overflow-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold">{title}</h2>
+                <button 
+                  onClick={toggleExpand}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              <img src={imageUrl} alt={title} className="w-full h-64 object-cover mb-4 rounded" />
+              <p className="text-gray-600 mb-4">{description}</p>
+              <a 
+                href={link} 
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit Project
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
-
 
 const Projects = () => {
   const projects = [
     {
       title: "Source Code For This Website",
-      description: "Click to view the source for this website.",
-      imageUrl: "./images/file-not-found.png",
+      description: "View the source code for this portfolio website on GitHub.",
+      imageUrl: "./images/github.png",
       link: "https://github.com/mithranm/portfolio-source"
     },
     {
       title: "CatGPT",
-      description: "Click to join a discord server with an AI chatbot that roleplays a cat.",
-      imageUrl: "./images/file-not-found.png",
+      description: `Join a Discord server with an AI chatbot that roleplays as a my cat, Molly.
+      
+      This chatbot system uses Discord as a frontend. Messages are logged to a Discord.js project which sends conversation as prompts to a Retrieval Augment Generation enhanced LLM. Google Gemini 1.5 Pro to create queries for RAG. The RAG system is powered by Perplexity AI and a Vector Database of Personal Information. The LLM producing the final response is Gemini 1.5 flash.
+      `,
+      imageUrl: "./images/MollyAI.png",
       link: "https://github.com/mithranm/catgpt"
     },
     {
       title: "Resume",
-      description: "Click to view my resume (this is outdated right now).",
+      description: "View my professional resume (Note: currently outdated).",
       imageUrl: "./images/leone-venter-VieM9BdZKFo-unsplash.jpg",
       link: "https://drive.google.com/file/d/1HStvUm-9jVPa6aKtordWNPSnZ26o0Ge4/view?usp=sharing"
     },
     {
-      title: "YouTube Video",
-      description: "Click to watch a YouTube video I made. The video explains the application of the dot product in video games to calculate the field of view of a non-player character.",
+      title: "Dot Product in Video Games",
+      description: "Watch my YouTube video explaining how the dot product is used in video games to calculate NPC field of view.",
       imageUrl: "./images/zombiefov90degrees.png",
       link: "https://youtu.be/mB-S07g6BKU"
-    }
-    ,
-    {
-      title: "Limit Test (Ignore this)",
-      description: `Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`,
-
-      imageUrl: "./images/file-not-found.png",
-      link: "https://mithranm.github.io"
     }
   ];
 
@@ -105,7 +136,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
       <h2 className="text-2xl font-bold mb-6">Projects</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project, index) => (
-          <ProjectCard key={index} {...project} />
+          <ProjectCard key={index} {...project} heightClass="h-[24rem]" />
         ))}
       </div>
     </div>
