@@ -39,7 +39,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
   return (
     <>
       <div className="group cursor-pointer" onClick={toggleExpand}>
-        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
           <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
             <div className="absolute top-0 left-0 w-full h-full">
               {renderImage()}
@@ -67,7 +67,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
               )}
             </div>
           </div>
-          <div className="absolute bottom-2 right-2 text-blue-500 group-hover:text-blue-700 transition-transform duration-300 ease-in-out transform group-hover:scale-95">
+          <div className="absolute bottom-2 right-2 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
             <ExternalLink size={20} />
           </div>
         </div>
