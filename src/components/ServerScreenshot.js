@@ -1,39 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { AlertCircle } from 'lucide-react'; // Assuming you're using lucide-react for icons
+import React, { useState, useEffect, useCallback } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { debounce } from 'lodash';
 
 const ServerScreenshot = ({ serverIndex, width = 300, height = 200 }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchScreenshot = async () => {
+  const fetchScreenshot = useCallback(
+    debounce(async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("https://mithran-website-ohwdmnsxkq-uc.a.run.app/screenshot");
-        
+        const response = await fetch("https://mithran.org/screenshot");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
         const data = await response.json();
-        
-        if (!data.image) {
-          throw new Error('No image data received');
+        if (data.image) {
+          setImageUrl(`https://mithran.org${data.image}`);
+        } else {
+          throw new Error('No image URL received');
         }
-
-        setImageUrl(data.image);
       } catch (error) {
         console.error('Error fetching screenshot:', error);
         setError('Failed to load image');
       } finally {
         setLoading(false);
       }
-    };
+    }, 1000),
+    []
+  );
 
+  useEffect(() => {
     fetchScreenshot();
-  }, [serverIndex]);
+    return () => fetchScreenshot.cancel();
+  }, [fetchScreenshot, serverIndex]);
 
   if (loading) {
     return (
@@ -54,10 +57,10 @@ const ServerScreenshot = ({ serverIndex, width = 300, height = 200 }) => {
 
   return (
     <div className="screenshot-element w-full h-full">
-      <img 
-        src={imageUrl} 
-        alt={`Screenshot of ${serverIndex}`} 
-        className="w-full h-full object-cover" 
+      <img
+        src={imageUrl}
+        alt={`Screenshot of ${serverIndex}`}
+        className="w-full h-full object-cover"
         onError={() => setError('Failed to load image')}
       />
     </div>

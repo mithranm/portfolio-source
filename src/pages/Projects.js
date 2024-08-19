@@ -30,7 +30,7 @@ const Projects = () => {
       },
       {
         title: "Recursive App Preview",
-        description: "A miniature preview of the entire application layout (WIP).",
+        description: "This is supposed to be an infinite recursion effect, but its still a work in progress.",
         imageUrl: "/recursive-preview",
         link: "https://github.com/mithranm/portfolio-source",
         useAppRender: true
