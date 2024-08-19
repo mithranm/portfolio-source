@@ -20,21 +20,27 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     document.body.style.overflow = isExpanded ? 'auto' : 'hidden';
   };
 
-  const renderImage = () => {
+  const renderImage = (isExpandedView = false) => {
     if (useAppRender) {
       return <MiniAppPreview projects={projects} />;
     } else if (useScreenshot) {
-      return <ServerScreenshot path={imageUrl} />;
+      return <ServerScreenshot serverIndex={imageUrl} />;
     } else {
-      return <img src={imageUrl} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" />;
+      return (
+        <img 
+          src={imageUrl} 
+          alt={title} 
+          className={isExpandedView ? 'w-auto h-auto max-w-full max-h-[70vh] object-contain' : 'w-full h-full object-cover'}
+        />
+      );
     }
   };
 
   return (
     <>
       <div className="group cursor-pointer" onClick={toggleExpand}>
-        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
-          <div className="relative pb-[56.25%]"> {/* This maintains a 4:3 aspect ratio */}
+        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full">
+          <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
             <div className="absolute top-0 left-0 w-full h-full">
               {renderImage()}
             </div>
@@ -68,7 +74,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
       </div>
       {isExpanded && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-full overflow-auto">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-2xl font-bold">{title}</h2>
@@ -79,8 +85,8 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                   <X size={24} />
                 </button>
               </div>
-              <div className="w-full aspect-[4/3] mb-4">
-                {renderImage()}
+              <div className="mb-4 flex items-center justify-center bg-gray-100">
+                {renderImage(true)}
               </div>
               <p className="text-gray-600 mb-4">{description}</p>
               <a 

@@ -6,7 +6,7 @@ const Projects = () => {
       {
         title: "Website Source Code",
         description: "View the source code for this portfolio website on GitHub. The above screenshot was dynamically generated and will show an up to date time in EST under my profile picture.",
-        imageUrl: "/",
+        imageUrl: "1",
         link: "https://github.com/mithranm/portfolio-source",
         useScreenshot: true
       },

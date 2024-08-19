@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle } from 'lucide-react'; // Assuming you're using lucide-react for icons
 
-const ServerScreenshot = ({ path, width = 300, height = 200 }) => {
+const ServerScreenshot = ({ serverIndex, width = 300, height = 200 }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ const ServerScreenshot = ({ path, width = 300, height = 200 }) => {
     };
 
     fetchScreenshot();
-  }, [path]);
+  }, [serverIndex]);
 
   if (loading) {
     return (
@@ -56,7 +56,7 @@ const ServerScreenshot = ({ path, width = 300, height = 200 }) => {
     <div className="screenshot-element w-full h-full">
       <img 
         src={imageUrl} 
-        alt={`Screenshot of ${path}`} 
+        alt={`Screenshot of ${serverIndex}`} 
         className="w-full h-full object-cover" 
         onError={() => setError('Failed to load image')}
       />
