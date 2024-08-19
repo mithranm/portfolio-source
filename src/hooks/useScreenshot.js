@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 
+// Move the cache outside of the hook to make it persist across re-renders and component unmounts
+const cache = new Map();
+
 const useScreenshot = (serverIndex) => {
-  const [imageUrl, setImageUrl] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(() => cache.get(serverIndex) || '');
+  const [loading, setLoading] = useState(!cache.has(serverIndex));
   const [error, setError] = useState(null);
 
   const fetchScreenshot = useCallback(() => {
-    if (imageUrl) {
+    if (cache.has(serverIndex)) {
+      setImageUrl(cache.get(serverIndex));
       setLoading(false);
       return;
     }
@@ -22,7 +26,9 @@ const useScreenshot = (serverIndex) => {
       })
       .then(data => {
         if (data.image) {
-          setImageUrl(`https://mithran.org${data.image}`);
+          const fullImageUrl = `https://mithran.org${data.image}`;
+          setImageUrl(fullImageUrl);
+          cache.set(serverIndex, fullImageUrl);
         } else {
           throw new Error('No image URL received');
         }
@@ -34,10 +40,12 @@ const useScreenshot = (serverIndex) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [imageUrl]);
+  }, [serverIndex]);
 
   useEffect(() => {
-    fetchScreenshot();
+    if (!cache.has(serverIndex)) {
+      fetchScreenshot();
+    }
   }, [fetchScreenshot, serverIndex]);
 
   return { imageUrl, loading, error };

@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import useScreenshot from '../hooks/useScreenshot';
 
-const ServerScreenshot = ({ serverIndex }) => {
+const ServerScreenshot = React.memo(({ serverIndex }) => {
   const { imageUrl, loading, error } = useScreenshot(serverIndex);
 
   if (loading) {
@@ -31,6 +31,6 @@ const ServerScreenshot = ({ serverIndex }) => {
       />
     </div>
   );
-};
+});
 
 export default ServerScreenshot;

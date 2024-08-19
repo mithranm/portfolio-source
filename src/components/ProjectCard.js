@@ -1,5 +1,6 @@
 import { X, ExternalLink, ChevronDown } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import ServerScreenshot from './ServerScreenshot';
 import MiniAppPreview from './MiniAppPreview';
 
@@ -40,7 +41,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     <>
       <div className="group cursor-pointer" onClick={toggleExpand}>
         <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
-          <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
+          <div className="relative pb-[56.25%]">
             <div className="absolute top-0 left-0 w-full h-full">
               {renderImage()}
             </div>
@@ -48,12 +49,12 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
           <div className="p-4 flex flex-col flex-grow">
             <h2 className="text-xl font-semibold mb-2 group-hover:text-blue-600 line-clamp-2">{title}</h2>
             <div className="flex-grow overflow-hidden">
-              <p 
+              <div 
                 ref={descriptionRef}
                 className="text-gray-600 line-clamp-2"
               >
-                {description}
-              </p>
+                <ReactMarkdown>{description}</ReactMarkdown>
+              </div>
               {showReadMore && (
                 <button
                   onClick={(e) => {
@@ -88,7 +89,9 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
               <div className="mb-4 flex items-center justify-center bg-gray-100">
                 {renderImage(true)}
               </div>
-              <p className="text-gray-600 mb-4">{description}</p>
+              <div className="text-gray-600 mb-4">
+                <ReactMarkdown>{description}</ReactMarkdown>
+              </div>
               <a 
                 href={link} 
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block"

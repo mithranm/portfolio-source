@@ -1,0 +1,44 @@
+[
+  {
+    "id": "Website Source Code",
+    "title": "Website Source Code",
+    "description": "View the source code for this portfolio website on GitHub.\n\n**Fun Fact**\nThe above screenshot was dynamically generated and will show an up to date time in EST under my profile picture.\n\n**About**\nI created this website using React and deployed it to the free website hosting service by Github. Read more about it in the [documentation](https://mithranm.github.io/documentation).",
+    "order": 1,
+    "imageUrl": "1",
+    "link": "https://github.com/mithranm/portfolio-source",
+    "useScreenshot": true
+  },
+  {
+    "id": "CatGPT",
+    "title": "CatGPT - A Cat-Like AI Assistant",
+    "description": "Join a Discord server with an AI chatbot that roleplays as my cat, Molly.\n\nThe chatbot uses Retrieval Augmented Generation with two sources, one is the internet and the other is a knowledge base of documents describing Molly's life.",
+    "order": 9999,
+    "imageUrl": "./images/MollyAI.png",
+    "link": "https://github.com/mithranm/catgpt"
+  },
+  {
+    "id": "Dot Product",
+    "title": "Dot Product in Video Games",
+    "description": "Watch my YouTube video explaining how the dot product is used in video games to calculate NPC field of view.",
+    "order": 9999,
+    "imageUrl": "./images/zombiefov90degrees.png",
+    "link": "https://youtu.be/mB-S07g6BKU"
+  },
+  {
+    "id": "Patriot Hacks 2023",
+    "title": "PatriotHacks 2023 Winner - HoneyCar",
+    "description": "Check out my team's submission for PatriotHacks 2023.",
+    "order": 9999,
+    "imageUrl": "./images/honeycar.jpeg",
+    "link": "https://devpost.com/software/honeycar"
+  },
+  {
+    "id": "Recursive App",
+    "title": "Recursive App Render",
+    "description": "This is supposed to be an infinite recursion effect, but its still a work in progress.",
+    "order": 9999,
+    "imageUrl": "",
+    "link": "https://github.com/mithranm/portfolio-source",
+    "useAppRender": true
+  }
+]
