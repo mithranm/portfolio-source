@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// Move the cache outside of the hook to make it persist across re-renders and component unmounts
 const cache = new Map();
+const serverIndexDictionary = {
+  '1': 'https://mithran.org/screenshot'
+};
 
 const useScreenshot = (serverIndex) => {
   const [imageUrl, setImageUrl] = useState(() => cache.get(serverIndex) || '');
@@ -9,15 +11,10 @@ const useScreenshot = (serverIndex) => {
   const [error, setError] = useState(null);
 
   const fetchScreenshot = useCallback(() => {
-    if (cache.has(serverIndex)) {
-      setImageUrl(cache.get(serverIndex));
-      setLoading(false);
-      return;
-    }
-
+    let isCurrent = true;
     setLoading(true);
     setError(null);
-    fetch(`https://mithran.org/screenshot`)
+    fetch(serverIndexDictionary[serverIndex])
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -25,30 +22,43 @@ const useScreenshot = (serverIndex) => {
         return response.json();
       })
       .then(data => {
-        if (data.image) {
-          const fullImageUrl = `https://mithran.org${data.image}`;
+        if (!data.image) {
+          throw new Error('No image URL received');
+        }
+        return `https://mithran.org${data.image}`;
+      })
+      .then(fullImageUrl => {
+        if (isCurrent) {
           setImageUrl(fullImageUrl);
           cache.set(serverIndex, fullImageUrl);
-        } else {
-          throw new Error('No image URL received');
+          setLoading(false);
         }
       })
       .catch(error => {
         console.error('Error fetching screenshot:', error);
-        setError('Failed to load image');
-      })
-      .finally(() => {
-        setLoading(false);
+        if (isCurrent) {
+          setError('Failed to load image');
+          setLoading(false);
+          cache.delete(serverIndex);
+        }
       });
+
+    return () => {
+      isCurrent = false;
+    };
   }, [serverIndex]);
 
   useEffect(() => {
     if (!cache.has(serverIndex)) {
-      fetchScreenshot();
+      const cleanup = fetchScreenshot();
+      return cleanup;
+    } else {
+      setImageUrl(cache.get(serverIndex));
+      setLoading(false);
     }
   }, [fetchScreenshot, serverIndex]);
 
-  return { imageUrl, loading, error };
+  return { imageUrl, loading, error, refetch: fetchScreenshot };
 };
 
 export default useScreenshot;

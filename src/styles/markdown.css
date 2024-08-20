@@ -1,0 +1,10 @@
+.markdown-content a {
+    color: #3b82f6;
+    /* Tailwind's blue-500 */
+    text-decoration: underline;
+}
+
+.markdown-content a:hover {
+    color: #1d4ed8;
+    /* Tailwind's blue-700 */
+}
