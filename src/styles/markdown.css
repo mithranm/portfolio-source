@@ -7,4 +7,5 @@
 .markdown-content a:hover {
     color: #1d4ed8;
     /* Tailwind's blue-700 */
+    white-space: pre-wrap;
 }

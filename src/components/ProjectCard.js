@@ -26,7 +26,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     if (useAppRender) {
       return <MiniAppPreview projects={projects} />;
     } else if (useScreenshot) {
-      return <ServerScreenshot serverIndex={imageUrl} />;
+      return <ServerScreenshot serverIndex={imageUrl || '0'} />;
     } else {
       return (
         <img
@@ -36,6 +36,10 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
         />
       );
     }
+  };
+
+  const customRenderers = {
+    p: ({ children }) => <p className="mb-2">{children}</p>
   };
 
   return (
@@ -55,7 +59,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                 className="text-gray-600 line-clamp-2 markdown-content"
               >
                 <div className="text-gray-600 line-clamp-2 markdown-content">
-                  <ReactMarkdown>{description}</ReactMarkdown>
+                  <ReactMarkdown components={customRenderers}>{description}</ReactMarkdown>
                 </div>
               </div>
               {showReadMore && (
@@ -93,7 +97,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                 {renderImage(true)}
               </div>
               <div className="text-gray-600 mb-4 markdown-content">
-                <ReactMarkdown>{description}</ReactMarkdown>
+                <ReactMarkdown components={customRenderers}>{description}</ReactMarkdown>
               </div>
               <a
                 href={link}

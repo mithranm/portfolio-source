@@ -15,9 +15,9 @@ const useScreenshot = (serverIndex) => {
     setLoading(true);
     setError(null);
 
-    const url = serverIndex.startsWith('http') 
-      ? serverIndex 
-      : `https://mithran.org/screenshot?index=${serverIndex}`;
+    const url = serverIndex.startsWith('http')
+      ? serverIndex
+      : `https://api.mithran.org/screenshot?index=${encodeURIComponent(serverIndex)}`;
 
     fetch(url)
       .then(response => {
@@ -26,7 +26,7 @@ const useScreenshot = (serverIndex) => {
       })
       .then(data => {
         if (!data.image) throw new Error('No image URL received');
-        const fullImageUrl = data.image.startsWith('http') ? data.image : `https://mithran.org${data.image}`;
+        const fullImageUrl = data.image.startsWith('http') ? data.image : `https://api.mithran.org${data.image}`;
         setImageUrl(fullImageUrl);
         cache.set(serverIndex, fullImageUrl);
         setLoading(false);
