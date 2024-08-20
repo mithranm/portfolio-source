@@ -17,7 +17,7 @@ const useScreenshot = (serverIndex) => {
 
     setLoading(true);
     setError(null);
-    fetch("https://mithran.org/screenshot")
+    fetch(`https://mithran.org/screenshot`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

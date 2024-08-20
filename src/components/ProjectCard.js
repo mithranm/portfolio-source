@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import ServerScreenshot from './ServerScreenshot';
 import MiniAppPreview from './MiniAppPreview';
+import '../styles/markdown.css'
 
 const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false, useAppRender = false, projects }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,9 +29,9 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
       return <ServerScreenshot serverIndex={imageUrl} />;
     } else {
       return (
-        <img 
-          src={imageUrl} 
-          alt={title} 
+        <img
+          src={imageUrl}
+          alt={title}
           className={isExpandedView ? 'w-auto h-auto max-w-full max-h-[70vh] object-contain' : 'w-full h-full object-cover'}
         />
       );
@@ -49,11 +50,13 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
           <div className="p-4 flex flex-col flex-grow">
             <h2 className="text-xl font-semibold mb-2 group-hover:text-blue-600 line-clamp-2">{title}</h2>
             <div className="flex-grow overflow-hidden">
-              <div 
+              <div
                 ref={descriptionRef}
-                className="text-gray-600 line-clamp-2"
+                className="text-gray-600 line-clamp-2 markdown-content"
               >
-                <ReactMarkdown>{description}</ReactMarkdown>
+                <div className="text-gray-600 line-clamp-2 markdown-content">
+                  <ReactMarkdown>{description}</ReactMarkdown>
+                </div>
               </div>
               {showReadMore && (
                 <button
@@ -79,7 +82,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-2xl font-bold">{title}</h2>
-                <button 
+                <button
                   onClick={toggleExpand}
                   className="text-gray-500 hover:text-gray-700"
                 >
@@ -89,11 +92,11 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
               <div className="mb-4 flex items-center justify-center bg-gray-100">
                 {renderImage(true)}
               </div>
-              <div className="text-gray-600 mb-4">
+              <div className="text-gray-600 mb-4 markdown-content">
                 <ReactMarkdown>{description}</ReactMarkdown>
               </div>
-              <a 
-                href={link} 
+              <a
+                href={link}
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block"
                 target="_blank"
                 rel="noopener noreferrer"

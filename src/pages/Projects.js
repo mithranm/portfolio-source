@@ -1,8 +1,7 @@
-import { getProjectsData } from '../utils/projectLoader';
 import ProjectCard from '../components/ProjectCard'
+import projects from '../data/projects.json';
 
 const Projects = () => {
-  const projects = getProjectsData();
   
   return (
     <div className="container mx-auto px-4 py-8">

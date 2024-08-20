@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CatGPT.md",
+                "file": "Recursive App.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CatGPT.md",
+                "file": "Recursive App.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CatGPT.md",
+                "file": "Recursive App.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CatGPT.md"
+                "file": "Recursive App.md"
               }
             }
           }
@@ -161,9 +161,9 @@
   },
   "active": "85fa5bcafb51bcc4",
   "lastOpenFiles": [
-    "Dot Product.md",
-    "Recursive App.md",
     "CatGPT.md",
+    "Recursive App.md",
+    "Dot Product.md",
     "Patriot Hacks 2023.md",
     "Website Source Code.md",
     "Mreow.md"

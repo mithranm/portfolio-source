@@ -11,4 +11,4 @@ View the source code for this portfolio website on GitHub.
 The above screenshot was dynamically generated and will show an up to date time in EST under my profile picture.
 
 **About**
-I created this website using React and deployed it to the free website hosting service by Github. Read more about it in the [documentation](https://mithranm.github.io/documentation).
+I created this website using React and deployed it to the free website hosting service by Github. Read more about it in the [documentation](https://mithranm.github.io/#/documentation).

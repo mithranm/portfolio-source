@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, NavLink, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, NavLink, useLocation } from 'react-router-dom';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import Projects from './pages/Projects';
 import Documentation from './pages/Documentation';
@@ -64,11 +64,11 @@ const Footer = () => (
 
 const AppContent = () => {
   const location = useLocation();
-  const isDocumentationPage = location.pathname === '/documentation';
+  const isProjectsPage = location.pathname === '/' || location.hash === '#/';
 
   return (
     <div className="min-h-screen flex flex-col">
-      {!isDocumentationPage && <Header />}
+      {isProjectsPage && <Header />}
       <SubHeader />
       <main className="flex-grow bg-gray-100">
         <Routes>
@@ -83,7 +83,7 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Router basename="/mithranm.github.io">
+    <Router>
       <AppContent />
     </Router>
   );
