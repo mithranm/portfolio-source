@@ -1,5 +1,5 @@
 ---
-imageUrl: "1"
+imageUrl: "https://mithran.org/screenshot?index=1"
 link: "https://github.com/mithranm/portfolio-source"
 useScreenshot: true
 order: 1

@@ -2,13 +2,13 @@ import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import ServerScreenshot from './ServerScreenshot'
 
-const MiniProjectCard = ({ title, imageUrl, depth, useAppRender, useScreenshot, projects, path }) => (
+const MiniProjectCard = ({ title, imageUrl, depth, useAppRender, useScreenshot, projects, serverIndex }) => (
   <div className="bg-white shadow rounded overflow-hidden" style={{ aspectRatio: '4/3' }}>
     <div className="relative w-full h-full">
       {useAppRender && depth < 3 ? (
         <MiniAppPreview projects={projects} depth={depth + 1} />
       ) : useScreenshot ? (
-        <ServerScreenshot path={path} />
+        <ServerScreenshot serverIndex={serverIndex} />
       ) : (
         <img src={imageUrl} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" />
       )}
@@ -47,7 +47,7 @@ const MiniAppPreview = ({ projects = [], depth = 0 }) => {
         )}
         <div className="grid grid-cols-3 gap-1" style={{ gap: showText ? `${4 * scale}px` : '1px' }}>
           {projects.map((project, index) => (
-            <MiniProjectCard key={index} {...project} depth={depth} projects={projects} />
+            <MiniProjectCard key={index} {...project} depth={depth} projects={projects} serverIndex={index.toString()} />
           ))}
           {depth < 2 && (
             <MiniProjectCard 
@@ -57,6 +57,7 @@ const MiniAppPreview = ({ projects = [], depth = 0 }) => {
               useScreenshot={false}
               depth={depth}
               projects={projects}
+              serverIndex="0"
             />
           )}
         </div>
