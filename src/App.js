@@ -63,6 +63,7 @@ const Footer = () => (
 );
 
 const AppContent = () => {
+  console.log('Rendering AppContent');
   const location = useLocation();
   const isProjectsPage = location.pathname === '/' || location.hash === '#/';
 

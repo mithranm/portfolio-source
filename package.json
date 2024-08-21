@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://mithranm.github.io",
   "dependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -19,6 +20,7 @@
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
     "remark": "^15.0.1",
+    "remark-breaks": "^4.0.0",
     "remark-html": "^16.0.1",
     "web-vitals": "^2.1.4"
   },

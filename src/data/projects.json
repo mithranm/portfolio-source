@@ -31,14 +31,5 @@
     "order": 9999,
     "imageUrl": "./images/honeycar.jpeg",
     "link": "https://devpost.com/software/honeycar"
-  },
-  {
-    "id": "Recursive App",
-    "title": "Recursive App Render",
-    "description": "This is supposed to be an infinite recursion effect, but its still a work in progress.",
-    "order": 9999,
-    "imageUrl": "",
-    "link": "https://github.com/mithranm/portfolio-source",
-    "useAppRender": true
   }
 ]

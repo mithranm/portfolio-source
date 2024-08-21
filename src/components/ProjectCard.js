@@ -3,10 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import ServerScreenshot from './ServerScreenshot';
-import MiniAppPreview from './MiniAppPreview';
 import '../styles/markdown.css'
 
-const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false, useAppRender = false, projects }) => {
+const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false, isInMiniApp = false}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showReadMore, setShowReadMore] = useState(false);
   const descriptionRef = useRef(null);
@@ -19,14 +18,23 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
 
   const toggleExpand = (e) => {
     e.preventDefault();
-    setIsExpanded(!isExpanded);
-    document.body.style.overflow = isExpanded ? 'auto' : 'hidden';
+    if (!isInMiniApp) {
+      setIsExpanded(!isExpanded);
+      document.body.style.overflow = isExpanded ? 'auto' : 'hidden';
+    }
+  };
+
+  const handleClick = (e) => {
+    if (isInMiniApp) {
+      e.preventDefault();
+      alert(`Clicked mini project card: ${title}`);
+    } else {
+      toggleExpand(e);
+    }
   };
 
   const renderImage = (isExpandedView = false) => {
-    if (useAppRender) {
-      return <MiniAppPreview projects={projects} />;
-    } else if (useScreenshot) {
+    if (useScreenshot) {
       return <ServerScreenshot serverIndex={imageUrl} />;
     } else {
       return (
@@ -45,49 +53,45 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
   };
 
   return (
-    <>
-      <div className="group cursor-pointer" onClick={toggleExpand}>
-        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
-          <div className="relative pb-[56.25%]">
-            <div className="absolute top-0 left-0 w-full h-full">
-              {renderImage()}
-            </div>
-          </div>
-          <div className="p-4 flex flex-col flex-grow">
-            <h2 className="text-xl font-semibold mb-2 group-hover:text-blue-600 line-clamp-2">{title}</h2>
-            <div className="flex-grow overflow-hidden">
-              <div
-                ref={descriptionRef}
-                className="text-gray-600 line-clamp-2 markdown-content"
+    <div className="group cursor-pointer" onClick={handleClick}>
+      <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
+        <div className="aspect-video overflow-hidden">
+          {renderImage()}
+        </div>
+        <div className="p-4 flex flex-col flex-grow">
+          <h2 className="text-xl font-semibold group-hover:text-blue-600 line-clamp-1">
+            {title}
+          </h2>
+          <div className="flex-grow overflow-hidden">
+            <div
+              ref={descriptionRef}
+              className="text-gray-600 line-clamp-1 markdown-content"
+            >
+              <ReactMarkdown
+                components={customRenderers}
+                remarkPlugins={[remarkBreaks]}
               >
-                <div className="text-gray-600 line-clamp-2 markdown-content">
-                  <ReactMarkdown 
-                    components={customRenderers}
-                    remarkPlugins={[remarkBreaks]}
-                  >
-                    {description}
-                  </ReactMarkdown>
-                </div>
-              </div>
-              {showReadMore && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleExpand(e);
-                  }}
-                  className="text-blue-500 hover:text-blue-700 flex items-center mt-2"
-                >
-                  Read More <ChevronDown className="ml-1" size={16} />
-                </button>
-              )}
+                {description}
+              </ReactMarkdown>
             </div>
-          </div>
-          <div className="absolute bottom-2 right-2 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
-            <ExternalLink size={20} />
+            {showReadMore && !isInMiniApp && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleExpand(e);
+                }}
+                className="text-blue-500 hover:text-blue-700 flex items-center mt-2"
+              >
+                Read More <ChevronDown className="ml-1" size={16} />
+              </button>
+            )}
           </div>
         </div>
+        <div className="absolute bottom-2 right-2 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
+          <ExternalLink size={20} />
+        </div>
       </div>
-      {isExpanded && (
+      {isExpanded && !isInMiniApp && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
             <div className="p-6">
@@ -104,7 +108,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                 {renderImage(true)}
               </div>
               <div className="text-gray-600 mb-4 markdown-content">
-                <ReactMarkdown 
+                <ReactMarkdown
                   components={customRenderers}
                   remarkPlugins={[remarkBreaks]}
                 >
@@ -123,7 +127,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

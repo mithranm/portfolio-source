@@ -40,14 +40,14 @@ const ServerScreenshot = React.memo(({ serverIndex }) => {
   }
 
   return (
-    <div className="screenshot-element w-full h-full">
-      <img
-        src={imageUrl}
-        alt={`Screenshot of server ${serverIndex}`}
-        className="w-full h-full object-cover"
-        onError={handleImageError}
-      />
-    </div>
+    <div className="aspect-video relative">
+    <img
+      src={imageUrl}
+      alt={`Screenshot of server ${serverIndex}`}
+      className="absolute inset-0 w-full h-full object-cover"
+      onError={handleImageError}
+    />
+  </div>
   );
 });
 

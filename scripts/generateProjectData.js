@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
-const { marked } = require('marked');
 
 const projectsDirectory = path.join(__dirname, '..', 'project-files');
 const dataDirectory = path.join(__dirname, '..', 'src', 'data');
