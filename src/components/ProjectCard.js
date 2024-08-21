@@ -1,6 +1,7 @@
 import { X, ExternalLink, ChevronDown } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 import ServerScreenshot from './ServerScreenshot';
 import MiniAppPreview from './MiniAppPreview';
 import '../styles/markdown.css'
@@ -26,7 +27,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     if (useAppRender) {
       return <MiniAppPreview projects={projects} />;
     } else if (useScreenshot) {
-      return <ServerScreenshot serverIndex={imageUrl || '0'} />;
+      return <ServerScreenshot serverIndex={imageUrl} />;
     } else {
       return (
         <img
@@ -39,7 +40,8 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
   };
 
   const customRenderers = {
-    p: ({ children }) => <p className="mb-2">{children}</p>
+    p: ({ children }) => <p className="mb-2">{children}</p>,
+    br: () => <br />,
   };
 
   return (
@@ -59,7 +61,12 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                 className="text-gray-600 line-clamp-2 markdown-content"
               >
                 <div className="text-gray-600 line-clamp-2 markdown-content">
-                  <ReactMarkdown components={customRenderers}>{description}</ReactMarkdown>
+                  <ReactMarkdown 
+                    components={customRenderers}
+                    remarkPlugins={[remarkBreaks]}
+                  >
+                    {description}
+                  </ReactMarkdown>
                 </div>
               </div>
               {showReadMore && (
@@ -97,7 +104,12 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                 {renderImage(true)}
               </div>
               <div className="text-gray-600 mb-4 markdown-content">
-                <ReactMarkdown components={customRenderers}>{description}</ReactMarkdown>
+                <ReactMarkdown 
+                  components={customRenderers}
+                  remarkPlugins={[remarkBreaks]}
+                >
+                  {description}
+                </ReactMarkdown>
               </div>
               <a
                 href={link}
