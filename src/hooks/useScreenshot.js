@@ -1,9 +1,9 @@
+// useScreenshot.js
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { debounce } from 'lodash'; // Make sure to install lodash
+import { debounce } from 'lodash';
 
 const cache = new Map();
 
-// Define the base URL based on the environment
 const BASE_URL = process.env.NODE_ENV === 'development' 
   ? 'http://localhost:8080' 
   : 'https://api.mithran.org';
@@ -17,21 +17,24 @@ const useScreenshot = (serverIndex) => {
   const MAX_RETRIES = 3;
   const RETRY_DELAY = 5000;
 
-  const checkServerHealth = () => {
-    return fetch(`${BASE_URL}/health`)
-      .then(response => response.json())
-      .then(data => data.status === 'OK');
-  };
-
   const fetchScreenshot = useCallback(() => {
+    if (!serverIndex) {
+      setError('Invalid server index');
+      setLoading(false);
+      return;
+    }
+  
     if (fetchingRef.current) return;
     fetchingRef.current = true;
     setLoading(true);
     setError(null);
 
-    checkServerHealth()
-      .then(isHealthy => {
-        if (isHealthy) {
+    console.log('Fetching screenshot for server index:', serverIndex);
+  
+    fetch(`${BASE_URL}/health`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'OK') {
           const url = serverIndex.startsWith('http')
             ? serverIndex
             : `${BASE_URL}/screenshot?index=${encodeURIComponent(serverIndex)}`;
@@ -56,6 +59,7 @@ const useScreenshot = (serverIndex) => {
               .catch(error => {
                 console.error('Error fetching screenshot:', error);
                 if (retryCount < MAX_RETRIES) {
+                  console.log(`Retrying... (${retryCount + 1}/${MAX_RETRIES})`);
                   setTimeout(() => attemptFetch(retryCount + 1), RETRY_DELAY);
                 } else {
                   setError('Failed to load image');
@@ -67,7 +71,7 @@ const useScreenshot = (serverIndex) => {
                 fetchingRef.current = false;
               });
           };
-
+  
           attemptFetch();
         } else {
           throw new Error('Server is not ready');
@@ -82,7 +86,7 @@ const useScreenshot = (serverIndex) => {
         fetchingRef.current = false;
       });
   }, [serverIndex]);
-
+  
   const debouncedFetchScreenshot = useMemo(
     () => debounce(fetchScreenshot, 200),
     [fetchScreenshot]
@@ -90,6 +94,7 @@ const useScreenshot = (serverIndex) => {
 
   useEffect(() => {
     if (!cache.has(serverIndex)) {
+      console.log('Fetching screenshot for server index on mount:', serverIndex);
       debouncedFetchScreenshot();
     } else {
       setImageUrl(cache.get(serverIndex));
@@ -102,6 +107,7 @@ const useScreenshot = (serverIndex) => {
   }, [debouncedFetchScreenshot, serverIndex]);
 
   const refetch = useCallback(() => {
+    console.log('Refetching screenshot for server index:', serverIndex);
     cache.delete(serverIndex);
     fetchScreenshot();
   }, [serverIndex, fetchScreenshot]);

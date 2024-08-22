@@ -3,9 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import ServerScreenshot from './ServerScreenshot';
-import '../styles/markdown.css'
 
-const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false, isInMiniApp = false}) => {
+const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false, isInMiniApp = false }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showReadMore, setShowReadMore] = useState(false);
   const descriptionRef = useRef(null);
@@ -20,22 +19,33 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     e.preventDefault();
     if (!isInMiniApp) {
       setIsExpanded(!isExpanded);
-      document.body.style.overflow = isExpanded ? 'auto' : 'hidden';
+      document.body.style.overflow = !isExpanded ? 'hidden' : 'auto';
     }
   };
 
-  const handleClick = (e) => {
-    if (isInMiniApp) {
-      e.preventDefault();
-      alert(`Clicked mini project card: ${title}`);
-    } else {
+  const handleCardClick = (e) => {
+    if (!isInMiniApp) {
       toggleExpand(e);
     }
   };
 
+  const handleLinkClick = (e) => {
+    e.stopPropagation();
+  };
+
   const renderImage = (isExpandedView = false) => {
     if (useScreenshot) {
-      return <ServerScreenshot serverIndex={imageUrl} />;
+      const serverIndex = extractServerIndex(imageUrl);
+      
+      console.log('Rendering ServerScreenshot with Server Index:', serverIndex, 'Is Expanded View:', isExpandedView);
+  
+      return (
+        <ServerScreenshot 
+          key={`${serverIndex}-${isExpandedView ? 'expanded' : 'collapsed'}`} 
+          serverIndex={serverIndex} 
+          isExpandedView={isExpandedView}
+        />
+      );
     } else {
       return (
         <img
@@ -47,13 +57,18 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     }
   };
 
-  const customRenderers = {
-    p: ({ children }) => <p className="mb-2">{children}</p>,
-    br: () => <br />,
+  const extractServerIndex = (url) => {
+    try {
+      const urlObj = new URL(url, 'https://api.mithran.org');
+      return urlObj.searchParams.get('index') || '1';
+    } catch (error) {
+      console.error('Invalid URL provided:', url);
+      return null;
+    }
   };
 
   return (
-    <div className="group cursor-pointer" onClick={handleClick}>
+    <div className="group cursor-pointer" onClick={handleCardClick}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
         <div className="aspect-video overflow-hidden">
           {renderImage()}
@@ -68,7 +83,10 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
               className="text-gray-600 line-clamp-1 markdown-content"
             >
               <ReactMarkdown
-                components={customRenderers}
+                components={{
+                  p: ({ children }) => <p className="mb-2">{children}</p>,
+                  br: () => <br />,
+                }}
                 remarkPlugins={[remarkBreaks]}
               >
                 {description}
@@ -88,7 +106,9 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
           </div>
         </div>
         <div className="absolute bottom-2 right-2 text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
-          <ExternalLink size={20} />
+          <a href={link} target="_blank" rel="noopener noreferrer" onClick={handleLinkClick}>
+            <ExternalLink size={20} />
+          </a>
         </div>
       </div>
       {isExpanded && !isInMiniApp && (
@@ -109,7 +129,10 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
               </div>
               <div className="text-gray-600 mb-4 markdown-content">
                 <ReactMarkdown
-                  components={customRenderers}
+                  components={{
+                    p: ({ children }) => <p className="mb-2">{children}</p>,
+                    br: () => <br />,
+                  }}
                   remarkPlugins={[remarkBreaks]}
                 >
                   {description}
@@ -120,6 +143,7 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleLinkClick}
               >
                 Visit Project
               </a>
