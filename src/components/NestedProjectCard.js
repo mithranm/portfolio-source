@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { X, ExternalLink, ChevronDown } from 'lucide-react';
-import SimpleMarkdown from './SimpleMarkdown';
 import AppContent from './AppContent';
 import '../styles/markdown.css';
 
@@ -49,7 +48,7 @@ const NestedProjectCard = ({ title, description, link, level = 0 }) => {
         </h2>
         <div className="flex-grow overflow-hidden flex flex-col justify-between">
           <div className="text-gray-600 markdown-content line-clamp-1">
-            <SimpleMarkdown text={description} />
+            <div text={description} />
           </div>
           {level === 0 && (
             <button
@@ -113,7 +112,7 @@ const NestedProjectCard = ({ title, description, link, level = 0 }) => {
             </div>
             {renderNestedPreview()}
             <div className="text-gray-600 my-4 markdown-content">
-              <SimpleMarkdown text={description} />
+              <div text={description} />
             </div>
             <a
               href={link}

@@ -1,3 +1,12 @@
+.markdown-content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.markdown-content p {
+  margin-bottom: 1em;
+}
+
 .markdown-content a {
     color: #3b82f6;
     /* Tailwind's blue-500 */

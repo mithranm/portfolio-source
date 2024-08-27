@@ -1,7 +1,6 @@
 import { X, ExternalLink, ChevronDown } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkBreaks from 'remark-breaks';
+import DOMPurify from 'dompurify';
 import ServerScreenshot from './ServerScreenshot';
 
 const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false, isInMiniApp = false }) => {
@@ -67,6 +66,11 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
     }
   };
 
+  const sanitizeAndRenderHTML = (content) => {
+    const sanitizedContent = DOMPurify.sanitize(content);
+    return { __html: sanitizedContent };
+  };
+
   return (
     <div className="group cursor-pointer" onClick={handleCardClick}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105 flex flex-col h-full relative">
@@ -81,17 +85,8 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
             <div
               ref={descriptionRef}
               className="text-gray-600 line-clamp-1 markdown-content"
-            >
-              <ReactMarkdown
-                components={{
-                  p: ({ children }) => <p className="mb-2">{children}</p>,
-                  br: () => <br />,
-                }}
-                remarkPlugins={[remarkBreaks]}
-              >
-                {description}
-              </ReactMarkdown>
-            </div>
+              dangerouslySetInnerHTML={sanitizeAndRenderHTML(description)}
+            />
             {showReadMore && !isInMiniApp && (
               <button
                 onClick={(e) => {
@@ -127,17 +122,10 @@ const ProjectCard = ({ title, description, imageUrl, link, useScreenshot = false
               <div className="mb-4 flex items-center justify-center bg-gray-100">
                 {renderImage(true)}
               </div>
-              <div className="text-gray-600 mb-4 markdown-content">
-                <ReactMarkdown
-                  components={{
-                    p: ({ children }) => <p className="mb-2">{children}</p>,
-                    br: () => <br />,
-                  }}
-                  remarkPlugins={[remarkBreaks]}
-                >
-                  {description}
-                </ReactMarkdown>
-              </div>
+              <div 
+                className="text-gray-600 mb-4 markdown-content"
+                dangerouslySetInnerHTML={sanitizeAndRenderHTML(description)}
+              />
               <a
                 href={link}
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block"
